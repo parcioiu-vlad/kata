@@ -51,10 +51,4 @@ class KaprekarTest {
     LOG.info("Splitting number 12345 = " + numbers)
   }
 
-  @Test
-  def getNumberDigitsTest() {
-    val numberOfDigits = kaprekar.getNumberDigits(123, 1)
-    Assert.assertEquals(numberOfDigits, 3)
-  }
-
 }

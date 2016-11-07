@@ -19,13 +19,22 @@ class Kaprekar {
     * @param leftInterval left side of the interval
     * @param rightInterval right side of the interval
     * @return list of kaprekar numbers
+    * @throws IllegalArgumentException when inputs are negative or when leftInterval > rightInterval
     */
+  @throws(classOf[IllegalArgumentException])
   def getKaprekarNumbers(leftInterval: Long, rightInterval: Long) : mutable.Buffer[Double] = {
-    //TODO check for negative numbers
+
+    if (leftInterval > rightInterval) {
+      throw new IllegalArgumentException("Left side of interval greater than right side")
+    }
+
+    if (leftInterval < 0 || rightInterval < 0) {
+      throw new IllegalArgumentException("Input cannot be < 0")
+    }
 
     var kaprekarNumbers = new ArrayBuffer[Double]
 
-    if (leftInterval == 1) {
+    if (leftInterval > 0) {
       kaprekarNumbers += 1
     }
 
@@ -51,10 +60,11 @@ class Kaprekar {
   }
 
   def splitNumber(number: Long) : (Long, Long, Long, Long) = {
-    val numberOfDigits = getNumberDigits(number, 1)
+    val numberOfDigits = number.toString.length
 
     var left : Long = 0
     var right : Long = 0
+    //in case of odd number of digits we have two cases (e.g 88209 has two possibilities 88 + 209 or 882 + 9)
     var leftOdd : Long = 0
     var rightOdd : Long = 0
 
@@ -74,15 +84,6 @@ class Kaprekar {
       }
 
       (left, right, leftOdd, rightOdd)
-    }
-  }
-
-  def getNumberDigits(number: Double, digitNo: Int): Int = {
-    if (number < 10) {
-      digitNo
-    }
-    else {
-      getNumberDigits(number / 10, digitNo + 1)
     }
   }
 }
