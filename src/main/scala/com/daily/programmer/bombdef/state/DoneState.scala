@@ -3,22 +3,14 @@ package com.daily.programmer.bombdef.state
 /**
   * Created by Vlad-Alexandru.PIRCI on 12/11/2016.
   */
-class OrangeState extends State{
+class DoneState extends State {
 
   override def cut(nextState: String): State = {
-    if (nextState == null) {
-      return null
-    }
-
-    if ("green".equals(nextState)) {
-      return Transition.stateMap("done")
-    }
-
-    null
-
+    this
   }
 
   override def name(): String = {
-    "orange"
+    "done"
   }
+
 }

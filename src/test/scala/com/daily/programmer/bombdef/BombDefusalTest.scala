@@ -14,7 +14,30 @@ class BombDefusalTest {
     */
   @Test
   def defuseBomb(): Unit = {
-    val wires = List("white", "red", "green", "white")
+    var wires = List("white",
+      "white",
+      "red",
+      "white",
+      "orange",
+      "black",
+      "black",
+      "green",
+      "orange")
+
+    Assert.assertEquals("Bomb defused", bombDefusal.defuse(wires))
+
+    wires = List(
+      "white",
+      "white",
+      "red",
+      "red",
+      "red",
+      "white",
+      "white",
+      "black",
+      "green",
+      "orange"
+    )
 
     Assert.assertEquals("Bomb defused", bombDefusal.defuse(wires))
   }
@@ -24,9 +47,49 @@ class BombDefusalTest {
     */
   @Test
   def goesBoom(): Unit = {
-    val wires = List("white", "orange", "green", "white")
+    var wires = List(
+        "white",
+        "white",
+        "green",
+        "orange",
+        "green"
+    )
 
     Assert.assertEquals("Boom", bombDefusal.defuse(wires))
+
+    wires = List(
+        "black",
+        "green",
+        "green"
+    )
+
+    Assert.assertEquals("Boom", bombDefusal.defuse(wires))
+  }
+
+  @Test
+  def canBeDefused(): Unit = {
+    val wireMap = Map(
+      "white" -> 4,
+      "red" -> 3,
+      "black" -> 4,
+      "green" -> 1,
+      "orange" -> 1
+    )
+
+    Assert.assertEquals(true, bombDefusal.canBeDefused(wireMap))
+  }
+
+  @Test
+  def cannotBeDefused(): Unit = {
+    val wireMap = Map(
+      "white" -> 4,
+      "red" -> 3,
+      "black" -> 4,
+      "green" -> 0,
+      "orange" -> 1
+    )
+
+    Assert.assertEquals(false, bombDefusal.canBeDefused(wireMap))
   }
 
 }

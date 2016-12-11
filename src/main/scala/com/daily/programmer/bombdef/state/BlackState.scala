@@ -10,10 +10,14 @@ class BlackState extends State {
       return null
     }
 
-    if ("white".equals(nextState) || "green".equals(nextState) || "orange".equals(nextState)) {
-      return null
+    if ("black".equals(nextState) || "green".equals(nextState) || "orange".equals(nextState)) {
+      return Transition.stateMap(nextState)
     }
 
-    Transition.stateMap(nextState)
+    null
+  }
+
+  override def name(): String = {
+    "black"
   }
 }
