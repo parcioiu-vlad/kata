@@ -27,6 +27,9 @@ class Blink extends React.Component {
             this.state.leds.push(led);
         }
 
+        this.interpreter = new Interpreter();
+        this.contextInterpreter = new Context();
+
         this.textAreaChanged = this.textAreaChanged.bind(this);
         this.evalScript = this.evalScript.bind(this);
     }
@@ -39,26 +42,33 @@ class Blink extends React.Component {
         console.log("Evaluating script: ");
         console.log(this.state.script);
 
-        let interpreter = new Interpreter();
-
         let lines = this.state.script.split('\n');
 
-        let context = new Context();
+        this.interpret(lines);
+    }
 
-        for (let i = 0; i < lines.length; i++) {
-            context.input = lines[i];
-            interpreter.interpret(context);
-
-            if (isNaN(context.output)) {
-                continue;
-            }
-
-            console.log("Computed result : " + context.output);
-            //TODO add blinkers
-            this.setState({blinker: context.output});
-
-            this.changeLedsColor(context.output);
+    interpret(lines) {
+        if (!lines || lines.length === 0) {
+            return;
         }
+
+        this.contextInterpreter.setInput(lines[0]);
+        this.interpreter.interpret(this.contextInterpreter);
+
+        if (isNaN(this.contextInterpreter.output)) {
+            return this.interpret(lines.slice(1));
+        }
+
+        console.log("Computed result : " + this.contextInterpreter.output);
+        this.setState({blinker: this.contextInterpreter.output});
+        this.changeLedsColor(this.contextInterpreter.output);
+
+        let self = this;
+        setTimeout(
+            function() {
+                self.interpret(lines.slice(1));
+            }
+            , 1000);
     }
 
     textAreaChanged(event) {
