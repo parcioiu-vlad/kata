@@ -20,4 +20,8 @@ class BlackState extends State {
   override def name(): String = {
     "black"
   }
+
+  override def getNextPossibleStateNames(): List[String] = {
+    List[String]("black", "green", "orange")
+  }
 }

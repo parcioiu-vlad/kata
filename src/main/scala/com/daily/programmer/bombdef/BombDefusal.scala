@@ -3,6 +3,7 @@ package com.daily.programmer.bombdef
 import com.daily.programmer.bombdef.state._
 import org.slf4j.LoggerFactory
 
+import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 /**
@@ -22,14 +23,20 @@ class BombDefusal {
 
   private val LOG = LoggerFactory.getLogger(classOf[BombDefusal])
 
-  def defuse(wires : List[String]): String = {
+  /**
+    * Check if the wires list can defuse the bomb
+    *
+    * @param wires list of wire names, the order specifies the cutting order
+    * @return 'Boom' cutting order was wrong, 'Bomb defused' if the cutting order was correct
+    */
+  def defuse(wires: List[String]): String = {
 
     if (wires == null || wires.isEmpty) {
       LOG.warn("No wires input")
       return null
     }
 
-    var state : State = Transition.stateMap("start")
+    var state: State = Transition.stateMap("start")
 
     for (wire <- wires) {
       if (state == null) {
@@ -41,7 +48,7 @@ class BombDefusal {
       state = cutWire(state, wire)
     }
 
-    if (state!= null && state.name().equals("done")) {
+    if (state != null && state.name().equals("done")) {
       "Bomb defused"
     } else {
       boom()
@@ -49,6 +56,8 @@ class BombDefusal {
 
   }
 
+
+  @Deprecated
   def canBeDefused(wireMap: Map[String, Int]): Boolean = {
     //TODO improve
     //TODO split in threads | use StateContext to pass the stateMap for threads
@@ -64,9 +73,9 @@ class BombDefusal {
 
     val wireListPermutations = wireList.permutations
 
-    for(wires <- wireListPermutations) {
+    for (wires <- wireListPermutations) {
       val result = defuse(wires.toList)
-      if ( "Bomb defused".equals(result)) {
+      if ("Bomb defused".equals(result)) {
         LOG.info("Wire list " + wires.toList + " is defusable")
         return true
       }
@@ -75,7 +84,63 @@ class BombDefusal {
     false
   }
 
-  def cutWire(state : State, wire : String): State = {
+  /**
+    * Check that the provided wire map can be defused
+    *
+    * @param wireMap map containg how many wires there are, e.g. ("white" -> 4,"red" -> 3) means that there are 4 white wires and
+    *                3 red wires
+    * @return true if the bomb can be defused, false otherwise
+    */
+  def canBeDefusedDFS(wireMap: Map[String, Int]): Boolean = {
+    val mWireMap = collection.mutable.Map() ++ wireMap
+
+    case class Wire(var name: String)
+    val wireStack = mutable.Stack[String]()
+
+    var state: State = Transition.stateMap("start")
+
+    wireStack.push("start")
+
+    while (wireStack.nonEmpty) {
+
+      if (state.name().equals("done")) {
+        LOG.info("Wire list " + wireStack.toList + " is defusable")
+        return true
+      }
+
+      val possibleStates = state.getNextPossibleStateNames()
+      val nextWire = hasNext(possibleStates, mWireMap)
+
+      if (nextWire == null) {
+        val wireFromStack = wireStack.pop()
+
+        if (wireFromStack.equals("start")) {
+          return false
+        }
+
+        val noStates = mWireMap(wireFromStack)
+        mWireMap.update(wireFromStack, noStates - 1)
+
+      } else {
+        val noStates = mWireMap(nextWire)
+        mWireMap(nextWire) = noStates - 1
+        wireStack.push(nextWire)
+        state = cutWire(state, nextWire)
+      }
+    }
+    false
+  }
+
+  def hasNext(possibleStates: List[String], wireMap: mutable.Map[String, Int]): String = {
+    for (wire <- possibleStates) {
+      if (wireMap.get(wire) != null && wireMap(wire) > 0) {
+        return wire
+      }
+    }
+    null
+  }
+
+  def cutWire(state: State, wire: String): State = {
     LOG.info("Cutting " + wire + " wire")
     state.cut(wire)
   }

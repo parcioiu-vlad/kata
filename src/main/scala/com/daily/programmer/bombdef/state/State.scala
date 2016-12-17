@@ -6,4 +6,5 @@ package com.daily.programmer.bombdef.state
 trait State {
   def cut(nextState: String) : State
   def name() : String
+  def getNextPossibleStateNames() : List[String]
 }

@@ -25,4 +25,7 @@ class StartState extends State {
     "start"
   }
 
+  override def getNextPossibleStateNames(): List[String] = {
+    List[String]("white", "red")
+  }
 }

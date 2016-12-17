@@ -76,7 +76,7 @@ class BombDefusalTest {
       "orange" -> 1
     )
 
-    Assert.assertEquals(true, bombDefusal.canBeDefused(wireMap))
+    Assert.assertEquals(true, bombDefusal.canBeDefusedDFS(wireMap))
   }
 
   @Test
@@ -89,7 +89,7 @@ class BombDefusalTest {
       "orange" -> 1
     )
 
-    Assert.assertEquals(false, bombDefusal.canBeDefused(wireMap))
+    Assert.assertEquals(false, bombDefusal.canBeDefusedDFS(wireMap))
   }
 
 }

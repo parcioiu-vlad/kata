@@ -13,4 +13,7 @@ class DoneState extends State {
     "done"
   }
 
+  override def getNextPossibleStateNames(): List[String] = {
+    null
+  }
 }
