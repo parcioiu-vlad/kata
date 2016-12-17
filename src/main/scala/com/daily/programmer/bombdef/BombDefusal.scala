@@ -56,34 +56,6 @@ class BombDefusal {
 
   }
 
-
-  @Deprecated
-  def canBeDefused(wireMap: Map[String, Int]): Boolean = {
-    //TODO improve
-    //TODO split in threads | use StateContext to pass the stateMap for threads
-    var wireList = new ArrayBuffer[String]
-
-    for (key <- wireMap.keySet) {
-      for (i <- 1 to wireMap(key)) {
-        wireList += key
-      }
-    }
-
-    LOG.info("Wire list : " + wireList)
-
-    val wireListPermutations = wireList.permutations
-
-    for (wires <- wireListPermutations) {
-      val result = defuse(wires.toList)
-      if ("Bomb defused".equals(result)) {
-        LOG.info("Wire list " + wires.toList + " is defusable")
-        return true
-      }
-    }
-
-    false
-  }
-
   /**
     * Check that the provided wire map can be defused
     *
