@@ -2,7 +2,11 @@ class Context {
     constructor() {
         this.input = '';
         this.output = '';
+        this.scriptLines = [];
+        this.currentLineNo = 0;
         this.variablesMap = new Map();
+        //Contains the label name and position in script
+        this.labelMap = new Map();
     }
 
     getElements() {
@@ -22,6 +26,10 @@ class Context {
 
     getVariablesMap() {
         return this.variablesMap;
+    }
+
+    endScript() {
+        return this.currentLineNo > this.scriptLines.length - 1;
     }
 
 }

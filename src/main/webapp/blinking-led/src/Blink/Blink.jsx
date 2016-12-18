@@ -6,8 +6,8 @@ import {Button} from 'react-bootstrap';
 import {FormGroup} from 'react-bootstrap';
 import {FormControl} from 'react-bootstrap';
 import {Label} from 'react-bootstrap';
-import Interpreter from './Interpreter.js';
-import Context from './Context.js';
+import Interpreter from './interpreter/Interpreter.js';
+import Context from './interpreter/Context.js';
 
 class Blink extends React.Component {
 
@@ -39,24 +39,29 @@ class Blink extends React.Component {
     };
 
     evalScript() {
+
         console.log("Evaluating script: ");
         console.log(this.state.script);
 
         let lines = this.state.script.split('\n');
 
-        this.interpret(lines);
+        this.contextInterpreter = new Context();
+
+        this.contextInterpreter.scriptLines = lines;
+        this.contextInterpreter.setInput(lines[0]);
+
+        this.interpret();
     }
 
-    interpret(lines) {
-        if (!lines || lines.length === 0) {
+    interpret() {
+        if (this.contextInterpreter.endScript()) {
             return;
         }
 
-        this.contextInterpreter.setInput(lines[0]);
         this.interpreter.interpret(this.contextInterpreter);
 
         if (isNaN(this.contextInterpreter.output)) {
-            return this.interpret(lines.slice(1));
+            return this.interpret();
         }
 
         console.log("Computed result : " + this.contextInterpreter.output);
@@ -66,7 +71,7 @@ class Blink extends React.Component {
         let self = this;
         setTimeout(
             function() {
-                self.interpret(lines.slice(1));
+                return self.interpret();
             }
             , 1000);
     }

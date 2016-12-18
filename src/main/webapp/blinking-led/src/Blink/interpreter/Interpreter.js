@@ -1,12 +1,15 @@
 import LdExpression from './LdExpression.js';
 import OutExpression from './OutExpression.js';
+import DjnzExpression from './DjnzExpression';
 
 class Interpreter {
     constructor() {
         this.ld = 'ld';
         this.out = 'out';
+        this.djnz = 'djnz';
         this.ldExpression = new LdExpression();
         this.outExpression = new OutExpression();
+        this.djnzExpression = new DjnzExpression();
     }
 
     /**
@@ -36,6 +39,15 @@ class Interpreter {
         else if (input.startsWith(this.out)) {
             context.output = this.outExpression.interpret(context);
         }
+        else if (input.startsWith(this.djnz)) {
+            this.djnzExpression.interpret(context);
+        }
+        else if (input.endsWith(':')) {
+            context.labelMap.set(input.replace(':', ''), context.currentLineNo)
+        }
+
+        context.currentLineNo++;
+        context.input = context.scriptLines[context.currentLineNo];
     }
 }
 
