@@ -24,6 +24,7 @@ Each line is in the following format:
 Instruction ld a,<num> sets internal 8-bit register A to the given number. Instruction out (0),a updates the LEDs according to the current number in A. The LED-0's state corresponds to bit 0 of number in A, when that number is represented in binary. For example, when A = 5, the LED state after out instruction is ".....*.*".
 You should output the LED states after each out instruction.
 Challenge input 1:
+
 ```
 ld a,14
 out (0),a
@@ -37,6 +38,7 @@ ld a,12
 out (0),a
 ld a,14
 out (0),a
+
 ```
 Expected output:
 ```
@@ -67,6 +69,7 @@ Each line has the following format:
 Instruction ld b,<num> sets a number to register B. Instruction rlca rotates bits in register A one position to the left, in circle (i.e. bit 0 goes to bit 1, bit 1 to bit 2, and bit 7 to bit 0). Instruction rrca rotates bits in register A one position to the right, in circle. Instruction djnz <labelref> (decrement and jump if not zero) subtracts one from the value of register B and if the new value of register B is not zero then the processing of instructions continues at the line containg label corresponding to the <labelref>. You can assume that in the input text <label> is always given before the corresponding <labelref> (i.e. jumps go backwards).
 You should output the LED states after each out instruction.
 Challenge Input 2:
+
 ```
 ld b,3
 
