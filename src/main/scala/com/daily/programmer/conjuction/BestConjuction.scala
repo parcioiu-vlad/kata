@@ -9,40 +9,41 @@ import scala.collection.mutable.ListBuffer
   * Your job is to find the best conjunction—
   * that is, find the word with the most sub-words inside of it given a list of English words.
   * Some example include:
-  *   Something (3 words: So, me, thing)
-  *   Awesomeness (3 words: awe, some, ness)
+  * Something (3 words: So, me, thing)
+  * Awesomeness (3 words: awe, some, ness)
+  *
+  * Bonus:
+  *     Instead of simply the last letter, allow any number of letters to be shared between words
+  *     (e.g. consciencestricken => conscience, sciences, stricken
   */
 class BestConjuction {
 
-  private val LOG = LoggerFactory.getLogger(classOf[BestConjuction])
+    private val LOG = LoggerFactory.getLogger(classOf[BestConjuction])
 
-  def getConjuctions(word: String, minSize: Int): List[String] = {
-    var words = new ListBuffer[String]
-    val dictionary = new DictionaryFileUtil
+    private  val dictionary = new DictionaryFileUtil
 
-    getWords(word, minSize).foreach(subWord => {
-      if (dictionary.getWordSet().apply(subWord)) {
-        words += subWord
-      }
-    })
+    def getConjuctions(word: String, minSize: Int): List[String] = {
+        if (word.length < minSize) {
+            LOG.warn("BestConjuction -> getWords - word length smaller than minSize")
+            return List.empty
+        }
 
-    words.toList
-  }
+        var words = new ListBuffer[String]
+        var i = 0
+        var j = ""
 
-  def getWords(word: String, minSize: Int): List[String] = {
-    if (word.length < minSize) {
-      LOG.warn("BestConjuction -> getWords - word length smaller than minSize")
-      return List.empty
+        for (i <- minSize until word.length - 1) {
+            for (j <- word.sliding(i)) {
+                if (wordExists(j)) {
+                    words += j
+                }
+            }
+        }
+
+        words.toList
     }
 
-    var i = 0
-    var words = new ListBuffer[String]
-
-    for (i <- 0 to word.length - minSize) {
-      words += word.substring(i, i + minSize)
+    private def wordExists(word: String): Boolean = {
+        dictionary.getWordSet().apply(word)
     }
-
-    words.toList
-  }
-
 }

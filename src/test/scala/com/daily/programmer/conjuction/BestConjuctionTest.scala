@@ -8,29 +8,20 @@ import org.slf4j.LoggerFactory
   */
 class BestConjuctionTest {
 
-  private val LOG = LoggerFactory.getLogger(classOf[BestConjuctionTest])
+    private val LOG = LoggerFactory.getLogger(classOf[BestConjuctionTest])
 
-  val bestConjuction = new BestConjuction
+    val bestConjuction = new BestConjuction
 
-  @Test
-  def getConjuctionsTest(): Unit = {
-    val word = "disproportionateness"
+    @Test
+    def getConjuctionsTest(): Unit = {
+        //    val word = "disproportionateness"
+        var word = "disinterestedness"
 
-    val conjuctions : List[String] = bestConjuction.getConjuctions(word, 3)
+        val conjuctions: List[String] = bestConjuction.getConjuctions(word, 8)
 
-    LOG.debug("BestConjuctionTest -> getConjuctionsTest - got " + conjuctions.toString())
+        LOG.debug("BestConjuctionTest -> getConjuctionsTest - got " + conjuctions.toString())
 
-    Assert.assertEquals(7, conjuctions.size)
-  }
-
-  @Test
-  def getWordsTest(): Unit = {
-    val word = "abc"
-    val words : List[String] = bestConjuction.getWords(word, 1)
-
-    LOG.debug("BestConjuctionTest -> getWordsTest - got " + words.toString())
-
-    Assert.assertEquals(6, words.size)
-  }
+        Assert.assertEquals(7, conjuctions.size)
+    }
 
 }
