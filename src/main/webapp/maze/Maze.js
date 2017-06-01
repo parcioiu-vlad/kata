@@ -1,16 +1,25 @@
+/**
+ * Maze generation using recursive division.
+ *
+ * It takes an rectangle and split it in two (random direction).
+ * The split is represented by a line (wall).
+ * After the split, it will add a gap in the wall and then recursively split the resulted rectangles.
+ */
 class Maze {
-    constructor() {
-        this.maze = new Array(4);
-        for(var i=0;i<4;i++) {
-            this.maze[i] = new Array(4);
-        }
 
-        this.generateMaze(0,0,4,4);
-        console.log(this.maze);
+    constructor(size) {
+        this._size = size;
+        this._maze = new Array(size);
+        for(let i=0;i<size;i++) {
+            this._maze[i] = new Array(size);
+        }
     }
 
+    generateMaze() {
+        this.divide(0, 0, this._size, this._size);
+    }
 
-    generateMaze(xMin, yMin, xMax, yMax) {
+    divide(xMin, yMin, xMax, yMax) {
         let width = xMax - xMin;
         let height = yMax - yMin;
 
@@ -18,54 +27,70 @@ class Maze {
             return;
         }
 
+        //get a random direction (1 - vertical, 2 - horizontal)
         let direction = Math.floor(Math.random() * 2) + 1;
-        let line = this.getLine(direction, xMin, yMin, xMax - 1 , yMax - 1);
 
-        let gapMin;
-        let gapMax;
-        let i;
-
+        // based on the direction add the wall and gap
         if (direction === 1) {
-            for (i = 0; i < xMax; i++) {
-                this.maze[i][line] = 1;
-            }
-            gapMin = this.getRandom(xMin, xMax - 1);
-            gapMax = this.getRandom(gapMin, xMax - 1);
+            let line = this.getVerticalLine(xMax - 1, xMin);
 
-            for (i = gapMin; i <= gapMax; i++) {
-                this.maze[i][line] = 0;
-            }
+            this.addVerticalWall(line, xMax);
 
-            this.generateMaze(xMin, yMin, line, yMax);
-            this.generateMaze(line+1, yMin, xMax, yMax);
+            this.addVerticalGap(line, xMin, xMax);
+
+            this.divide(xMin, yMin, line, yMax);
+            this.divide(line+1, yMin, xMax, yMax);
         } else {
-            for (i = 0; i < yMax; i++) {
-                this.maze[line][i] = 1;
-            }
-            gapMin = this.getRandom(yMin, yMax - 1);
-            gapMax = this.getRandom(gapMin, yMax - 1);
+            let line = this.getHorizontalLine(yMax - 1, yMin);
 
-            for (i = gapMin; i <= gapMax; i++) {
-                this.maze[line][i] = 0;
-            }
+            this.addHorizontalWall(line, yMax);
 
-            this.generateMaze(xMin, yMin, xMax, line);
-            this.generateMaze(xMin, line+1, xMax, yMax);
+            this.addHorizontalGap(line, yMin, yMax);
+
+            this.divide(xMin, yMin, xMax, line);
+            this.divide(xMin, line+1, xMax, yMax);
         }
     }
 
+    getVerticalLine(width, x) {
+        return Math.floor(Math.random() * (width - x + 1)) + x;
+    }
 
-    getLine(direction, x, y, width, height) {
-
-        if (direction === 1) {
-            return Math.floor(Math.random() * (width - x + 1)) + x;
-        } else {
-            return Math.floor(Math.random() * (height - y + 1)) + y;
-        }
-
+    getHorizontalLine(height, y) {
+        return Math.floor(Math.random() * (height - y + 1)) + y;
     }
 
     getRandom(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    addVerticalWall(line, xMax) {
+        for (let i = 0; i < xMax; i++) {
+            this._maze[i][line] = 1;
+        }
+    }
+
+    addHorizontalWall(line, yMax) {
+        for (let i = 0; i < yMax; i++) {
+            this._maze[line][i] = 1;
+        }
+    }
+
+    addVerticalGap(line, xMin, xMax) {
+        let gapMin = this.getRandom(xMin, xMax - 1);
+        let gapMax = this.getRandom(gapMin, xMax - 1);
+
+        for (let i = gapMin; i <= gapMax; i++) {
+            this._maze[i][line] = 0;
+        }
+    }
+
+    addHorizontalGap(line, yMin, yMax) {
+        let gapMin = this.getRandom(yMin, yMax - 1);
+        let gapMax = this.getRandom(gapMin, yMax - 1);
+
+        for (let i = gapMin; i <= gapMax; i++) {
+            this._maze[line][i] = 0;
+        }
     }
 }
