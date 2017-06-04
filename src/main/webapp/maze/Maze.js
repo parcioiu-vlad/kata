@@ -7,8 +7,9 @@
  */
 class Maze {
 
-    constructor(size) {
+    constructor(size, limit) {
         this._size = size;
+        this._limit = limit;
         this._maze = new Array(size);
         for(let i=0;i<size;i++) {
             this._maze[i] = new Array(size);
@@ -23,7 +24,7 @@ class Maze {
         let width = xMax - xMin;
         let height = yMax - yMin;
 
-        if (width < 2 || height < 2) {
+        if (width < this._limit || height < this._limit) {
             return;
         }
 
@@ -34,21 +35,21 @@ class Maze {
         if (direction === 1) {
             let line = this.getVerticalLine(xMax - 1, xMin);
 
-            this.addVerticalWall(line, xMax);
+            this.addVerticalWall(line, xMin, xMax);
 
             this.addVerticalGap(line, xMin, xMax);
 
-            this.divide(xMin, yMin, line, yMax);
-            this.divide(line+1, yMin, xMax, yMax);
+            this.divide(xMin, yMin, xMax, line);
+            this.divide(xMin, line+1, xMax, yMax);
         } else {
             let line = this.getHorizontalLine(yMax - 1, yMin);
 
-            this.addHorizontalWall(line, yMax);
+            this.addHorizontalWall(line, yMin, yMax);
 
             this.addHorizontalGap(line, yMin, yMax);
 
-            this.divide(xMin, yMin, xMax, line);
-            this.divide(xMin, line+1, xMax, yMax);
+            this.divide(xMin, yMin, line, yMax);
+            this.divide(line+1, yMin, xMax, yMax);
         }
     }
 
@@ -60,37 +61,37 @@ class Maze {
         return Math.floor(Math.random() * (height - y + 1)) + y;
     }
 
-    getRandom(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    addVerticalWall(line, xMax) {
-        for (let i = 0; i < xMax; i++) {
+    addVerticalWall(line, xMin, xMax) {
+        for (let i = xMin; i < xMax; i++) {
             this._maze[i][line] = 1;
         }
     }
 
-    addHorizontalWall(line, yMax) {
-        for (let i = 0; i < yMax; i++) {
+    addHorizontalWall(line, yMin, yMax) {
+        for (let i = yMin; i < yMax; i++) {
             this._maze[line][i] = 1;
         }
     }
 
     addVerticalGap(line, xMin, xMax) {
-        let gapMin = this.getRandom(xMin, xMax - 1);
-        let gapMax = this.getRandom(gapMin, xMax - 1);
+        let gapMin = this.getRandom(xMin, Math.floor(xMax / 2) - 1);
+        let gapMax = this.getRandom(gapMin + 1, xMax - 1);
 
-        for (let i = gapMin; i <= gapMax; i++) {
+        for (let i = gapMin; i < gapMax; i++) {
             this._maze[i][line] = 0;
         }
     }
 
     addHorizontalGap(line, yMin, yMax) {
-        let gapMin = this.getRandom(yMin, yMax - 1);
-        let gapMax = this.getRandom(gapMin, yMax - 1);
+        let gapMin = this.getRandom(yMin, Math.floor(yMax / 2) - 1);
+        let gapMax = this.getRandom(gapMin + 1, yMax - 1);
 
-        for (let i = gapMin; i <= gapMax; i++) {
+        for (let i = gapMin; i < gapMax; i++) {
             this._maze[line][i] = 0;
         }
+    }
+
+    getRandom(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 }
