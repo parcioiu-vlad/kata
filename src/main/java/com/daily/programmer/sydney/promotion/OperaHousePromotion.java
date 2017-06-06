@@ -11,15 +11,13 @@ public class OperaHousePromotion implements Promotion {
     @Override
     public Double calculate(List<Tour> tourList) {
 
-        Double total = calculateTotal(tourList);
-
         long operaHouseCount = tourList.stream().filter(t -> t.getId().equals(TourCodeEnum.OH.name())).count();
 
         if (operaHouseCount == 3) {
             Tour operaHouseTour = TourMockDb.getInstance().getTourById(TourCodeEnum.OH.name());
-            return total - operaHouseTour.getPrice();
+            return operaHouseTour.getPrice();
         }
 
-        return total;
+        return 0.0;
     }
 }

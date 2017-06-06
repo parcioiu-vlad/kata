@@ -6,10 +6,12 @@ import java.util.List;
 
 public interface Promotion {
 
+    /**
+     * Return the computed deduction
+     *
+     * @param tourList
+     * @return
+     */
     public Double calculate(List<Tour> tourList);
-
-    public default Double calculateTotal(List<Tour> tourList) {
-        return tourList.stream().mapToDouble(Tour::getPrice).sum();
-    }
 
 }
