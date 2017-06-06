@@ -32,32 +32,32 @@ public class SydneyBridgePromotionTest {
     public void calculateValidPromotion() {
         SydneyBridgePromotion skyPromotion = new SydneyBridgePromotion();
 
-        List<Tour> tourList = new ArrayList<>(1);
-        Tour operaTour1 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
-        Tour operaTour2 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
-        Tour operaTour3 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
-        Tour operaTour4 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
+        List<Tour> tourList = new ArrayList<>();
+        Tour tour1 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
+        Tour tour2 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
+        Tour tour3 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
+        Tour tour4 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
 
-        tourList.add(operaTour1);
-        tourList.add(operaTour2);
-        tourList.add(operaTour3);
-        tourList.add(operaTour4);
+        tourList.add(tour1);
+        tourList.add(tour2);
+        tourList.add(tour3);
+        tourList.add(tour4);
 
         Double deduction = skyPromotion.calculate(tourList);
         Double expectedDeduction = 20.0;
 
-        tourList = new ArrayList<>(1);
-        operaTour1 = TourMockDb.getInstance().getTourById(TourCodeEnum.OH.name());
-        operaTour2 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
-        operaTour3 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
-        operaTour4 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
-        Tour operaTour5 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
+        tourList = new ArrayList<>();
+        tour1 = TourMockDb.getInstance().getTourById(TourCodeEnum.OH.name());
+        tour2 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
+        tour3 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
+        tour4 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
+        Tour tour5 = TourMockDb.getInstance().getTourById(TourCodeEnum.BC.name());
 
-        tourList.add(operaTour1);
-        tourList.add(operaTour2);
-        tourList.add(operaTour3);
-        tourList.add(operaTour4);
-        tourList.add(operaTour5);
+        tourList.add(tour1);
+        tourList.add(tour2);
+        tourList.add(tour3);
+        tourList.add(tour4);
+        tourList.add(tour5);
 
         Assert.assertEquals(expectedDeduction, deduction);
     }

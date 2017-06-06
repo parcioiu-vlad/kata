@@ -29,30 +29,30 @@ public class SkyTourPromotionTest {
     public void calculateValidPromotion() {
         SkyTourPromotion skyPromotion = new SkyTourPromotion();
 
-        List<Tour> tourList = new ArrayList<>(1);
-        Tour operaTour1 = TourMockDb.getInstance().getTourById(TourCodeEnum.OH.name());
-        Tour operaTour2 = TourMockDb.getInstance().getTourById(TourCodeEnum.OH.name());
-        Tour operaTour3 = TourMockDb.getInstance().getTourById(TourCodeEnum.OH.name());
-        Tour operaTour4 = TourMockDb.getInstance().getTourById(TourCodeEnum.SK.name());
+        List<Tour> tourList = new ArrayList<>();
+        Tour tour1 = TourMockDb.getInstance().getTourById(TourCodeEnum.OH.name());
+        Tour tour2 = TourMockDb.getInstance().getTourById(TourCodeEnum.OH.name());
+        Tour tour3 = TourMockDb.getInstance().getTourById(TourCodeEnum.OH.name());
+        Tour tour4 = TourMockDb.getInstance().getTourById(TourCodeEnum.SK.name());
 
-        tourList.add(operaTour1);
-        tourList.add(operaTour2);
-        tourList.add(operaTour3);
-        tourList.add(operaTour4);
+        tourList.add(tour1);
+        tourList.add(tour2);
+        tourList.add(tour3);
+        tourList.add(tour4);
 
         Double deduction = skyPromotion.calculate(tourList);
         Double expectedDeduction = 30.0;
 
-        tourList = new ArrayList<>(1);
-        operaTour1 = TourMockDb.getInstance().getTourById(TourCodeEnum.OH.name());
-        operaTour2 = TourMockDb.getInstance().getTourById(TourCodeEnum.SK.name());
-        operaTour3 = TourMockDb.getInstance().getTourById(TourCodeEnum.SK.name());
-        operaTour4 = TourMockDb.getInstance().getTourById(TourCodeEnum.SK.name());
+        tourList = new ArrayList<>();
+        tour1 = TourMockDb.getInstance().getTourById(TourCodeEnum.OH.name());
+        tour2 = TourMockDb.getInstance().getTourById(TourCodeEnum.SK.name());
+        tour3 = TourMockDb.getInstance().getTourById(TourCodeEnum.SK.name());
+        tour4 = TourMockDb.getInstance().getTourById(TourCodeEnum.SK.name());
 
-        tourList.add(operaTour1);
-        tourList.add(operaTour2);
-        tourList.add(operaTour3);
-        tourList.add(operaTour4);
+        tourList.add(tour1);
+        tourList.add(tour2);
+        tourList.add(tour3);
+        tourList.add(tour4);
 
         Assert.assertEquals(expectedDeduction, deduction);
     }

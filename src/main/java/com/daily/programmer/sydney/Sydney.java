@@ -34,13 +34,15 @@ public class Sydney {
             return calculate(tourList);
         }
 
-        return promotionList.stream().mapToDouble(p -> p.calculate(tourList)).sum();
+        double total = tourList.stream().mapToDouble(Tour::getPrice).sum();
+        double deduction = promotionList.stream().mapToDouble(p -> p.calculate(tourList)).sum();
+
+        return total - deduction;
     }
 
     public Double calculate(List<Tour> tourList) {
 
         if (tourList == null) {
-            //TODO log me
             return 0.0;
         }
 

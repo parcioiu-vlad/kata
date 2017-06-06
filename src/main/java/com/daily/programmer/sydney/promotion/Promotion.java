@@ -12,6 +12,6 @@ public interface Promotion {
      * @param tourList
      * @return
      */
-    public Double calculate(List<Tour> tourList);
+    Double calculate(List<Tour> tourList);
 
 }
