@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class TourMockDb {
 
-    private TourMockDb instance;
+    private static TourMockDb instance;
 
     private Map<String, Tour> mockDb;
 
@@ -21,12 +21,16 @@ public class TourMockDb {
         mockDb.put("SK", sydneySky);
     }
 
-    private TourMockDb getInstance() {
+    public static TourMockDb getInstance() {
         if (instance == null) {
             instance = new TourMockDb();
         }
 
         return instance;
+    }
+
+    public Tour getTourById(String id) {
+        return new Tour(mockDb.get(id));
     }
 
 }

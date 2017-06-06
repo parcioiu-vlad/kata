@@ -1,5 +1,5 @@
 package com.daily.programmer.sydney.tour;
 
-enum TourCodeEnum {
+public enum TourCodeEnum {
     OH,BC,SK;
 }

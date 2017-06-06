@@ -14,6 +14,12 @@ public class Tour {
         this.price = price;
     }
 
+    public Tour(Tour tour) {
+        this.id = tour.getId();
+        this.name = tour.getName();
+        this.price = tour.getPrice();
+    }
+
     public String getId() {
         return id;
     }
