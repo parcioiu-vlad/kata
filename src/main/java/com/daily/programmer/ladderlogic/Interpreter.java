@@ -2,6 +2,8 @@ package com.daily.programmer.ladderlogic;
 
 import com.daily.programmer.ladderlogic.interpreter.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -9,15 +11,17 @@ import java.util.Stack;
  */
 public class Interpreter {
 
-    public Tree interpret(String input) {
+    public List<List<String>> interpret(String input) {
         String[] mnemonics = input.split("\\s+");
 
         Expression rootExpression = getExpression(mnemonics[0], mnemonics[1]);
 
-        Tree tree = new Tree(rootExpression);
-        Node node = tree.getRoot();
+        Stack<Integer> nodeStack = new Stack();
+        List<List<String>> output = new ArrayList<List<String>>();
+        int lineIndex = 0;
 
-        Stack<Node> nodeStack = new Stack();
+        output.add(new ArrayList<>());
+        output.get(lineIndex).add(rootExpression.getSymbol());
 
         int i=2;
         while (i < mnemonics.length) {
@@ -32,26 +36,21 @@ public class Interpreter {
             }
 
             if (expression.getName().equals(MnemonicEnum.NXB.name())) {
-                node = nodeStack.peek();
-            } else if (expression.getName().equals(MnemonicEnum.BND)) {
-                node = nodeStack.pop();
+                output.add(new ArrayList<>());
+                lineIndex = output.size() - 1;
+            } else if (expression.getName().equals(MnemonicEnum.BND.name())) {
+                lineIndex--;
+            } else if (expression.getName().equals(MnemonicEnum.BST.name())) {
                 i++;
                 continue;
+            } else {
+                output.get(lineIndex).add(rootExpression.getSymbol());
             }
 
-            Node childNode = new Node(expression);
-
-            node.addChild(childNode);
-
-            if (expression.getName().equals(MnemonicEnum.BST.name())) {
-                nodeStack.push(childNode);
-            }
-
-            node = childNode;
             i++;
         }
 
-        return tree;
+        return output;
     }
 
     private Expression getExpression(String mnemonicCommand, String mnemonicValue) {

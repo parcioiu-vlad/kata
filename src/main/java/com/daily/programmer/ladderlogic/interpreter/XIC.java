@@ -21,6 +21,11 @@ public class XIC implements Expression {
     }
 
     @Override
+    public String getSymbol() {
+        return "-| |-";
+    }
+
+    @Override
     public String toString() {
         return "XIC{" +
                 "value='" + value + '\'' +

@@ -6,5 +6,5 @@ package com.daily.programmer.ladderlogic.interpreter;
 public interface Expression {
 
     public String getName();
-
+    public String getSymbol();
 }

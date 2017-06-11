@@ -21,6 +21,11 @@ public class XIO implements Expression {
     }
 
     @Override
+    public String getSymbol() {
+        return "-|/|-";
+    }
+
+    @Override
     public String toString() {
         return "XIO{" +
                 "value='" + value + '\'' +
