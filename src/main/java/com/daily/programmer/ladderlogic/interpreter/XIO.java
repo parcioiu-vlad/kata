@@ -22,7 +22,7 @@ public class XIO implements Expression {
 
     @Override
     public String getSymbol() {
-        return "-|/|-";
+        return MnemonicEnum.XIO.getSymbol();
     }
 
     @Override

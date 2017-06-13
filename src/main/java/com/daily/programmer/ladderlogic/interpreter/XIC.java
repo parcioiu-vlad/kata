@@ -22,7 +22,7 @@ public class XIC implements Expression {
 
     @Override
     public String getSymbol() {
-        return "-| |-";
+        return MnemonicEnum.XIC.getSymbol();
     }
 
     @Override

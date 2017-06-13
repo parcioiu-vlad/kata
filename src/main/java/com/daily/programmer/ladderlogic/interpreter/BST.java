@@ -11,7 +11,7 @@ public class BST implements Expression {
 
     @Override
     public String getSymbol() {
-        return "+";
+        return MnemonicEnum.BST.getSymbol();
     }
 
     @Override

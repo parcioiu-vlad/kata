@@ -11,7 +11,7 @@ public class BND implements Expression {
 
     @Override
     public String getSymbol() {
-        return null;
+        return MnemonicEnum.BND.getSymbol();
     }
 
     @Override

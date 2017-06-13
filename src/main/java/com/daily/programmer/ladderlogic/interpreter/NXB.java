@@ -11,7 +11,7 @@ public class NXB implements Expression {
 
     @Override
     public String getSymbol() {
-        return "|";
+        return MnemonicEnum.NXB.getSymbol();
     }
 
     @Override
