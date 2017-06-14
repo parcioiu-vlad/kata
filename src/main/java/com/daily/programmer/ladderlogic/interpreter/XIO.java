@@ -1,5 +1,8 @@
 package com.daily.programmer.ladderlogic.interpreter;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by parci on 6/11/2017.
  */
@@ -21,8 +24,8 @@ public class XIO implements Expression {
     }
 
     @Override
-    public String getSymbol() {
-        return MnemonicEnum.XIO.getSymbol();
+    public List<String> getSymbol() {
+        return Arrays.asList(MnemonicEnum.XIO.getSymbol().split(""));
     }
 
     @Override

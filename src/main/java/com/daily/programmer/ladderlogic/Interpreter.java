@@ -26,7 +26,7 @@ public class Interpreter {
         Stack<Integer> lineNumberStack = new Stack<>();
 
         output.add(new ArrayList<>());
-        output.get(lineIndex).add(rootExpression.getSymbol());
+        output.get(lineIndex).addAll(rootExpression.getSymbol());
 
         int i=2;
         while (i < mnemonics.length) {
@@ -45,26 +45,52 @@ public class Interpreter {
                 lineIndex = output.size() - 1;
                 int previousLineIndex = lineNumberStack.peek();
                 int bstIndex = output.get(previousLineIndex).lastIndexOf(MnemonicEnum.BST.getSymbol());
-                addWhiteSpaces(bstIndex, previousLineIndex, lineIndex);
-                output.get(lineIndex).add(expression.getSymbol());
+                addWhiteSpaces(bstIndex, lineIndex);
+                output.get(lineIndex).addAll(expression.getSymbol());
 
                 output.add(new ArrayList<>());
                 lineIndex = output.size() - 1;
-                addWhiteSpaces(bstIndex, previousLineIndex, lineIndex);
+                addWhiteSpaces(bstIndex, lineIndex);
 
                 //if previous mnemoic is different from BST add BST symbol before
                 if (!mnemonics[i].equals(MnemonicEnum.BST.getSymbol())) {
                     output.get(lineIndex).add(MnemonicEnum.BST.getSymbol());
                 }
             } else if (expression.getName().equals(MnemonicEnum.BND.name())) {
+                output.get(lineIndex).addAll(expression.getSymbol());
+
+                int currentLineIndex = lineIndex;
                 lineIndex = lineNumberStack.pop();
-                //TODO add closing step
+
+                int currentLineSize = output.get(currentLineIndex).size();
+                int lineSize = output.get(lineIndex).size();
+
+                if (currentLineIndex - lineIndex  <= 2) {
+                    //TODO close directly to upper
+                    if (currentLineSize < lineSize) {
+
+                    } else if (currentLineSize > lineSize) {
+
+                    } else {
+
+                    }
+                }
+                else {
+                    //TODO close all to lineIndex, ignoring the ones that ends in '+'
+                    if (currentLineSize < lineSize) {
+
+                    } else if (currentLineSize > lineSize) {
+
+                    } else {
+
+                    }
+                }
             } else if (expression.getName().equals(MnemonicEnum.BST.name())) {
                 lineNumberStack.push(lineIndex);
-                output.get(lineIndex).add(expression.getSymbol());
+                output.get(lineIndex).addAll(expression.getSymbol());
             }
             else {
-                output.get(lineIndex).add(expression.getSymbol());
+                output.get(lineIndex).addAll(expression.getSymbol());
             }
 
             i++;
@@ -90,12 +116,9 @@ public class Interpreter {
         }
     }
 
-    private void addWhiteSpaces(int bstIndex, int previousLineIndex, int lineIndex) {
+    private void addWhiteSpaces(int bstIndex, int lineIndex) {
         for (int i=0;i<bstIndex;i++) {
-            int noWhiteSpaces = output.get(previousLineIndex).get(i).length();
-            for (int k=0;k<noWhiteSpaces;k++) {
-                output.get(lineIndex).add(" ");
-            }
+            output.get(lineIndex).add(" ");
         }
     }
 
