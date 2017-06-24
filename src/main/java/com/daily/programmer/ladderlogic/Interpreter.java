@@ -4,18 +4,16 @@ import com.daily.programmer.ladderlogic.interpreter.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
-import java.util.stream.IntStream;
 
 /**
  * Created by parci on 6/11/2017.
  */
 public class Interpreter {
 
-    private List<List<String>> output;
-
     public List<List<String>> interpret(String input) {
-        output = new ArrayList<List<String>>();
+        Context context = new Context(input);
+
+        List<List<String>> output = context.getOutput();
 
         String[] mnemonics = input.split("\\s+");
 
@@ -23,12 +21,11 @@ public class Interpreter {
 
         int lineIndex = 0;
 
-        Stack<Integer> lineNumberStack = new Stack<>();
-
         output.add(new ArrayList<>());
         output.get(lineIndex).addAll(rootExpression.getSymbol());
 
         int i=2;
+        context.setCurrentMnemonicIndex(i);
         while (i < mnemonics.length) {
 
             String mnemonicCommand = mnemonics[i];
@@ -40,63 +37,11 @@ public class Interpreter {
                 continue;
             }
 
-            //TODO put the id in draw method in Expression
-            if (expression.getName().equals(MnemonicEnum.NXB.name())) {
-                output.add(new ArrayList<>());
-                lineIndex = output.size() - 1;
-                int previousLineIndex = lineNumberStack.peek();
-                int bstIndex = output.get(previousLineIndex).lastIndexOf(MnemonicEnum.BST.getSymbol());
-                addWhiteSpaces(bstIndex, lineIndex);
-                output.get(lineIndex).addAll(expression.getSymbol());
-
-                output.add(new ArrayList<>());
-                lineIndex = output.size() - 1;
-                addWhiteSpaces(bstIndex, lineIndex);
-
-                //if previous mnemoic is different from BST add BST symbol before
-                if (!mnemonics[i].equals(MnemonicEnum.BST.getSymbol())) {
-                    output.get(lineIndex).add(MnemonicEnum.BST.getSymbol());
-                }
-            } else if (expression.getName().equals(MnemonicEnum.BND.name())) {
-                output.get(lineIndex).addAll(expression.getSymbol());
-
-                int currentLineIndex = lineIndex;
-                lineIndex = lineNumberStack.pop();
-
-                int currentLineSize = output.get(currentLineIndex).size();
-                int lineSize = output.get(lineIndex).size();
-
-                if (currentLineIndex - lineIndex  <= 2) {
-                    //TODO close directly to upper
-                    if (currentLineSize < lineSize) {
-                    }
-                    else if (currentLineSize > lineSize) {
-                        int noWhiteSpaces = currentLineSize - output.get(currentLineIndex -1).size() - 1;
-                        addWhiteSpaces(noWhiteSpaces, currentLineIndex -1);
-                        output.get(currentLineIndex - 1).add("|");
-                        output.get(lineIndex).add("+");
-                    }
-                }
-                else {
-                    //TODO close all to lineIndex, ignoring the ones that ends in '+' or '|'
-                    if (currentLineSize < lineSize) {
-
-                    } else if (currentLineSize > lineSize) {
-
-                    }
-                }
-            } else if (expression.getName().equals(MnemonicEnum.BST.name())) {
-                lineNumberStack.push(lineIndex);
-                output.get(lineIndex).addAll(expression.getSymbol());
-            }
-            else {
-                output.get(lineIndex).addAll(expression.getSymbol());
-            }
-
-            i++;
+            expression.draw(context);
+            context.setCurrentMnemonicIndex(i++);
         }
 
-        return output;
+        return context.getOutput();
     }
 
     private Expression getExpression(String mnemonicCommand, String mnemonicValue) {
@@ -115,11 +60,4 @@ public class Interpreter {
                 return null;
         }
     }
-
-    private void addWhiteSpaces(int bstIndex, int lineIndex) {
-        for (int i=0;i<bstIndex;i++) {
-            output.get(lineIndex).add(" ");
-        }
-    }
-
 }

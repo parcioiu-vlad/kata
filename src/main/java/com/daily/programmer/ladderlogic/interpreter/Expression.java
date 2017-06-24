@@ -9,4 +9,7 @@ public interface Expression {
 
     public String getName();
     public List<String> getSymbol();
+    public default void draw(Context context) {
+        context.getOutput().get(context.getLineIndex()).addAll(this.getSymbol());
+    }
 }
