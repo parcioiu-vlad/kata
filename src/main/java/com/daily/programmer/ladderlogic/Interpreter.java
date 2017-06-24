@@ -40,6 +40,7 @@ public class Interpreter {
                 continue;
             }
 
+            //TODO put the id in draw method in Expression
             if (expression.getName().equals(MnemonicEnum.NXB.name())) {
                 output.add(new ArrayList<>());
                 lineIndex = output.size() - 1;
@@ -68,20 +69,19 @@ public class Interpreter {
                 if (currentLineIndex - lineIndex  <= 2) {
                     //TODO close directly to upper
                     if (currentLineSize < lineSize) {
-
-                    } else if (currentLineSize > lineSize) {
-
-                    } else {
-
+                    }
+                    else if (currentLineSize > lineSize) {
+                        int noWhiteSpaces = currentLineSize - output.get(currentLineIndex -1).size() - 1;
+                        addWhiteSpaces(noWhiteSpaces, currentLineIndex -1);
+                        output.get(currentLineIndex - 1).add("|");
+                        output.get(lineIndex).add("+");
                     }
                 }
                 else {
-                    //TODO close all to lineIndex, ignoring the ones that ends in '+'
+                    //TODO close all to lineIndex, ignoring the ones that ends in '+' or '|'
                     if (currentLineSize < lineSize) {
 
                     } else if (currentLineSize > lineSize) {
-
-                    } else {
 
                     }
                 }
