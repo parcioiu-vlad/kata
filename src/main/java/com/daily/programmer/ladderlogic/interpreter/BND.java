@@ -41,19 +41,51 @@ public class BND implements Expression {
                 output.get(currentLineIndex - 1).add("|");
                 output.get(context.getLineIndex()).add("+");
             }
+            else {
+
+            }
         }
         else {
             //TODO close all to lineIndex, ignoring the ones that ends in '+' or '|'
+            int i = 0;
+            int maxListSize = getMaxListIndex(context);
+            while (i <= currentLineIndex) {
+                if (lineClosed(output, i)) {
+                    continue;
+                }
+                if (output.get(i).size() < maxListSize) {
+                    //add '-'
+                }
+                i++;
+            }
             if (currentLineSize < lineSize) {
 
-            } else if (currentLineSize > lineSize) {
+            }
+            else if (currentLineSize > lineSize) {
 
             }
+
         }
     }
 
     @Override
     public String toString() {
         return "BND{}";
+    }
+
+    private int getMaxListIndex(Context context) {
+        int max = 0;
+
+        for (List<String> line : context.getOutput()) {
+            if (line.size() > max) {
+                max = line.size();
+            }
+        }
+
+        return max;
+    }
+
+    private boolean lineClosed(List<List<String>> output, int index) {
+        return output.get(index).get(output.get(index).size() - 1).equals("+") || output.get(index).get(output.get(index).size() - 1).equals("|");
     }
 }
