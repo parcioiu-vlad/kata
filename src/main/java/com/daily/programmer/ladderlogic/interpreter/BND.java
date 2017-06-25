@@ -23,8 +23,6 @@ public class BND implements Expression {
         List<List<String>> output = context.getOutput();
         int lineIndex = context.getLineIndex();
 
-        output.get(lineIndex).addAll(this.getSymbol());
-
         int currentLineIndex = lineIndex;
         context.setLineIndex(context.getLineNumberStack().pop());
 
@@ -33,6 +31,7 @@ public class BND implements Expression {
 
         if (currentLineIndex - context.getLineIndex()  <= 2) {
             //TODO close directly to upper
+            output.get(lineIndex).addAll(this.getSymbol());
             if (currentLineSize < lineSize) {
             }
             else if (currentLineSize > lineSize) {
@@ -50,12 +49,20 @@ public class BND implements Expression {
             int i = 0;
             int maxListSize = getMaxListIndex(context);
             while (i <= currentLineIndex) {
-                if (lineClosed(output, i)) {
+                if (i % 2 == 0 && lineClosed(output, i)) {
+                    i++;
+                    continue;
+                }
+                else if (i % 2 != 0) {
+                    //TODO add '|'
+                    i++;
                     continue;
                 }
                 if (output.get(i).size() < maxListSize) {
                     //add '-'
+                    addBlank(output.get(i), maxListSize - output.get(i).size());
                 }
+                output.get(i).add("+");
                 i++;
             }
             if (currentLineSize < lineSize) {
@@ -86,6 +93,12 @@ public class BND implements Expression {
     }
 
     private boolean lineClosed(List<List<String>> output, int index) {
-        return output.get(index).get(output.get(index).size() - 1).equals("+") || output.get(index).get(output.get(index).size() - 1).equals("|");
+        return output.get(index).get(output.get(index).size() - 1).equals("+");
+    }
+
+    private void addBlank(List<String> output, int noBlanks) {
+        for (int i=0;i<noBlanks;i++) {
+            output.add("-");
+        }
     }
 }
