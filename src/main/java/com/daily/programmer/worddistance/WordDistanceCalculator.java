@@ -1,6 +1,5 @@
 package com.daily.programmer.worddistance;
 
-import com.daily.programmer.util.DictionaryFileUtil;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,10 +26,15 @@ public class WordDistanceCalculator {
     return wordPath;
   }
 
-  private void createTree(String word, Tree tree, int level) {
+  private void createTree(String word, Tree tree, int treeDepth) {
 
-    List<String> words = getWords(word, level);
-    level++;
+    if (treeDepth > word.length()) {
+      return;
+    }
+
+    List<String> words = getWords(word, treeDepth);
+
+    treeDepth++;
 
     for (String value : words) {
       Tree child = new Tree();
@@ -38,7 +42,7 @@ public class WordDistanceCalculator {
       child.setNodes(new ArrayList<>());
       tree.getNodes().add(child);
 
-      createTree(value, child, level);
+      createTree(value, child, treeDepth);
     }
   }
 
@@ -46,7 +50,7 @@ public class WordDistanceCalculator {
     List<String> words = new ArrayList<>();
 
     if (index > startWord.length()-1) {
-      return words;
+      index = 0;
     }
 
     StringBuilder stringBuilder = new StringBuilder(startWord);
@@ -54,7 +58,7 @@ public class WordDistanceCalculator {
     for (char alphabet = 'a'; alphabet <= 'z'; alphabet++) {
       stringBuilder.setCharAt(index, alphabet);
       String word = stringBuilder.toString();
-      if (startWord.equals(word)) {
+      if (word.equals(startWord)) {
         continue;
       }
       if (dictionary.contains(stringBuilder.toString())) {

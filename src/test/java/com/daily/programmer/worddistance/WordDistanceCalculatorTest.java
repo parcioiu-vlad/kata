@@ -14,7 +14,7 @@ public class WordDistanceCalculatorTest {
 
     WordDistanceCalculator wordDistanceCalculator = new WordDistanceCalculator(dictionary);
     List<String> shorttestPath = wordDistanceCalculator
-        .getShortestDistance("aaa", "dog");
+        .getShortestDistance("cat", "dog");
   }
 
 }
