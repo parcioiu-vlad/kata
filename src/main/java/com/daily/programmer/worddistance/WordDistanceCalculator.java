@@ -14,8 +14,6 @@ public class WordDistanceCalculator {
   }
 
   public List<String> getShortestDistance(String wordStart, String wordEnd) {
-    List<String> wordPath = new LinkedList<>();
-
     int treeLevel = 0;
 
     Tree root = new Tree();
@@ -23,9 +21,16 @@ public class WordDistanceCalculator {
     root.setValue(wordStart);
     createTree(wordStart, root, treeLevel);
 
-    return wordPath;
+    return find(root, wordEnd, new ArrayList<>());
   }
 
+  /**
+   * Creates a tree where the root is the word
+   * and the next levels are words with changed the letter corresponding to the tree level
+   * @param word
+   * @param tree
+   * @param treeDepth
+   */
   private void createTree(String word, Tree tree, int treeDepth) {
 
     if (treeDepth > word.length()) {
@@ -46,6 +51,13 @@ public class WordDistanceCalculator {
     }
   }
 
+  /**
+   * Creates a list of words by replacing the letter
+   * at index in startWord with letters from a to z.
+   * @param startWord
+   * @param index
+   * @return
+   */
   private List<String> getWords(String startWord, int index) {
     List<String> words = new ArrayList<>();
 
@@ -67,6 +79,21 @@ public class WordDistanceCalculator {
     }
 
     return words;
+  }
+
+  private List<String> find(Tree tree, String word, List<String> path) {
+    if (tree.getValue().equals(word)) {
+      return path;
+    }
+
+    for (Tree node: tree.getNodes()) {
+      if (find(node, word, path) != null) {
+        path.add(node.getValue());
+        return path;
+      }
+    }
+
+    return null;
   }
 
   private class Tree {
