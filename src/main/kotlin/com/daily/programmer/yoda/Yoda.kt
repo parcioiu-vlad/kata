@@ -30,13 +30,13 @@ class Yoda {
             val intA = listA[i].toString().toInt()
             val intB = listB[i].toString().toInt()
 
-            if (intA > intB) {
-                yodaListA.add(intA)
-            } else if (intA < intB) {
-                yodaListB.add(intB)
-            } else {
-                yodaListA.add(intA)
-                yodaListB.add(intB)
+            when {
+                intA > intB -> yodaListA.add(intA)
+                intA < intB -> yodaListB.add(intB)
+                else -> {
+                    yodaListA.add(intA)
+                    yodaListB.add(intB)
+                }
             }
         }
 
