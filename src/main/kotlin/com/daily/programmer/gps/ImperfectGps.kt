@@ -2,6 +2,7 @@ package com.daily.programmer.gps
 
 /**
  * https://open.kattis.com/problems/imperfectgps
+ * TODO find missing cases
  */
 class ImperfectGps {
 
@@ -52,18 +53,18 @@ class ImperfectGps {
     private fun findPair(measurementList: List<Measurement>,
                          time: Int): Pair<Measurement, Measurement> {
 
-        var measurement = measurementList.first()
-        var curr = measurementList.first()
+        var first = measurementList.first()
+        var second = measurementList.first()
         val iterator = measurementList.listIterator()
         while (iterator.hasNext()) {
-            curr = iterator.next()
-            if (curr.time > time) {
-                return Pair(measurement, curr)
+            second = iterator.next()
+            if (second.time >= time) {
+                return Pair(first, second)
             }
-            measurement = curr
+            first = second
         }
 
-        return Pair(measurement, curr)
+        return Pair(first, second)
     }
 
     private fun calculateGpsPosition(firstMeasurement: Measurement,
