@@ -1,28 +1,30 @@
 package instant.search
 
+import org.slf4j.LoggerFactory
 import org.w3c.dom.Element
 import org.w3c.dom.NodeList
 import org.xml.sax.InputSource
 import java.io.StringReader
 import javax.xml.parsers.DocumentBuilderFactory
 
-/**
- * Write a Java web application which provides "instant search" over properties listed in the National Register of Historic Places.
- * Rather than waiting for the user to press a submit button, your application will dynamically update search results as input is typed.
- * We provide the file nrhp.xml.gz, which contains selected information from the register's database.
- *
- *  The key component of your server-side application is an efficient, in-memory data structure for looking up properties (written in pure Java).
- *  A good solution may take several minutes to load, but can answer a query in well under 0.1 ms on a modern PC.
- */
-class InstantSearch(xmlContent: String) {
+class PropertyRepositoryFactory {
 
-  private var propertiesMap: HashMap<Long, Property> = HashMap()
+  val logger = LoggerFactory.getLogger(PropertyRepositoryFactory::class.java)
 
-  init {
-    this.loadData(xmlContent)
+  fun createPropertyRepository(xmlContent: String): PropertyRepository {
+    val start = System.currentTimeMillis()
+    logger.debug("PropertyRepositoryFactory -> createPropertyRepository - creating trie based repository")
+
+    val propertyMap = this.loadData(xmlContent)
+    val propertyRepository = PropertyRepositoryTrieImpl(propertyMap)
+
+    val end = System.currentTimeMillis() - start
+    logger.debug("PropertyRepositoryFactory -> createPropertyRepository - finished in $end ms")
+
+    return propertyRepository
   }
 
-  private fun loadData(xmlContent: String) {
+  private fun loadData(xmlContent: String): HashMap<Long, Property> {
     val dbFactory = DocumentBuilderFactory.newInstance()
     val dBuilder = dbFactory.newDocumentBuilder()
     val doc = dBuilder.parse(InputSource(StringReader(xmlContent)))
@@ -32,10 +34,12 @@ class InstantSearch(xmlContent: String) {
     val element = nodes.item(0) as Element
     val properties = element.getElementsByTagName("property")
 
-    this.initMap(properties)
+    return this.initMap(properties)
   }
 
-  private fun initMap(properties: NodeList) {
+  private fun initMap(properties: NodeList): HashMap<Long, Property> {
+    val propertiesMap: HashMap<Long, Property> = HashMap()
+
     for (i in 0 until properties.length) {
       val propertyElement = properties.item(i) as Element
       val id = propertyElement.attributes.getNamedItem("id").nodeValue
@@ -44,6 +48,7 @@ class InstantSearch(xmlContent: String) {
       val city = propertyElement.getElementsByTagName("city")
       val state = propertyElement.getElementsByTagName("state")
 
+      //TODO make name, address, city, state as lists
       propertiesMap[id.toLong()] = Property(id.toLong(),
               name.item(0).getFirstChild().getTextContent(),
               address.item(0)?.getFirstChild()?.getTextContent(),
@@ -51,6 +56,8 @@ class InstantSearch(xmlContent: String) {
               state.item(0)?.getFirstChild()?.getTextContent()
       )
     }
+
+    return propertiesMap
   }
 
 }
