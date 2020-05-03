@@ -52,18 +52,19 @@ class SmooshedMorse {
         val codeList = mutableListOf<String>()
 
         //used to backtrack
-        var stack = Stack<Morse>()
+        val stack = Stack<Morse>()
 
         if (code.length <= 4) {
-            return codeList;
+            return codeList
         }
 
+        //add to stack all possible permutations from the first 4 characters
         for (i in 1..4) {
             stack.push(Morse(i, getLetter(0, i, code)))
         }
 
         while (!stack.empty()) {
-            var morse = stack.pop()
+            val morse = stack.pop()
 
             if (morse.codeIndex == code.length) {
                 codeList.add(morse.code)
@@ -74,6 +75,7 @@ class SmooshedMorse {
                 continue
             }
 
+            //add to stack the next possible permutations from the next 4 characters
             for (i in 1..4) {
                 val index = morse.codeIndex
                 val end = index + i
