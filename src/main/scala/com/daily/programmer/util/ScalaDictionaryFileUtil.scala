@@ -6,7 +6,7 @@ import scala.io.Source
 /**
   * Created by vlad on 3/16/2017.
   */
-class DictionaryFileUtil {
+class ScalaDictionaryFileUtil {
 
   def getWordSet(): mutable.Set[String] = {
     var wordSet = new mutable.HashSet[String]()

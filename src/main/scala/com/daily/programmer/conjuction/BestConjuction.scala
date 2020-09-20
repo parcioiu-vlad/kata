@@ -1,6 +1,6 @@
 package com.daily.programmer.conjuction
 
-import com.daily.programmer.util.DictionaryFileUtil
+import com.daily.programmer.util.ScalaDictionaryFileUtil
 import org.slf4j.LoggerFactory
 
 import scala.collection.mutable.ListBuffer
@@ -20,7 +20,7 @@ class BestConjuction {
 
     private val LOG = LoggerFactory.getLogger(classOf[BestConjuction])
 
-    private  val dictionary = new DictionaryFileUtil
+    private  val dictionary = new ScalaDictionaryFileUtil
 
     def getConjuctions(word: String, minSize: Int): List[String] = {
         if (word.length < minSize) {
