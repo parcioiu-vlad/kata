@@ -6,15 +6,15 @@ import kotlin.math.absoluteValue
 /**
  * Handles the parking mechanisms: park/unpark a car (also for disabled-only bays) and provides a string representation of its state.
  */
-class Parking(private val size: Int, private val pedestrianExitIndexList: List<Int>, disabledBayIndexList: List<Int>) {
+class Parking(private val size: Int, private val pedestrianExits: List<Int>, disabledBays: List<Int>) {
 
     private var parkingSpaces: MutableList<Char> = mutableListOf()
 
     init {
         for (i in 0..size * size) {
-            if (pedestrianExitIndexList.contains(i)) {
+            if (pedestrianExits.contains(i)) {
                 parkingSpaces.add(i, '=')
-            } else if (disabledBayIndexList.contains(i)) {
+            } else if (disabledBays.contains(i)) {
                 parkingSpaces.add(i, '@')
             } else {
                 parkingSpaces.add(i, 'U')
@@ -44,28 +44,10 @@ class Parking(private val size: Int, private val pedestrianExitIndexList: List<I
             return -1
         }
 
-        val emptyBays = getEmptyBays(carType)
+        val index = getClosestToPedestrianExit(carType)
 
-        if (emptyBays.isEmpty()) {
+        if (index == -1) {
             return -1
-        }
-
-        var index = -1;
-        var min = Int.MAX_VALUE
-
-        for (i in 0 until parkingSpaces.size) {
-
-            if (!canParkCar(i, carType)) {
-                continue
-            }
-
-            for (element in pedestrianExitIndexList) {
-                val m = i - element
-                if (m.absoluteValue < min) {
-                    min = m.absoluteValue
-                    index = i
-                }
-            }
         }
 
         fillBay(index, carType)
@@ -115,38 +97,39 @@ class Parking(private val size: Int, private val pedestrianExitIndexList: List<I
      * @return the string representation of the parking as a 2-dimensional square. Note that cars do a U turn to continue to the next lane.
      */
     override fun toString(): String {
-
-        val parkingString: MutableList<String> = mutableListOf()
-        var from = 0
-        var to = size
-
-        for (i in 0 until size) {
-
-            if (i % 2 != 0) {
-                val sublist = ArrayList(parkingSpaces.subList(from, to))
-                sublist.reverse()
-
-                parkingString.add(sublist.joinToString(""))
+        return parkingSpaces.windowed(5, 5).mapIndexed {index, chars ->
+            if (index % 2 != 0) {
+                chars.reversed().joinToString("")
             } else {
-                parkingString.add(parkingSpaces.subList(from, to).joinToString(""))
+                chars.joinToString("")
+            }
+        }.joinToString("\n")
+    }
+
+    private fun getClosestToPedestrianExit(carType: Char): Int {
+        var index = -1
+        var min = Int.MAX_VALUE
+
+        for (i in 0 until parkingSpaces.size) {
+
+            if (!canParkCar(i, carType)) {
+                continue
             }
 
-            from += size
-            to += size
+            for (element in pedestrianExits) {
+                val m = i - element
+                if (m.absoluteValue < min) {
+                    min = m.absoluteValue
+                    index = i
+                }
+            }
         }
 
-        return parkingString.joinToString("\n")
+        return index
     }
 
     private fun isEmpty(c: Char): Boolean {
         return c == 'U' || c == '@'
-    }
-
-    private fun getEmptyBays(carType: Char): List<Char> {
-        if (carType == 'D') {
-            return this.parkingSpaces.filter { parkingSpace -> parkingSpace == '@' }
-        }
-        return this.parkingSpaces.filter { parkingSpace -> parkingSpace == 'U' }
     }
 
     private fun canParkCar(index: Int, carType: Char): Boolean {
@@ -157,11 +140,7 @@ class Parking(private val size: Int, private val pedestrianExitIndexList: List<I
     }
 
     private fun fillBay(index: Int, carType: Char) {
-        if (carType == 'D') {
-            parkingSpaces[index] = 'D'
-        } else {
-            parkingSpaces[index] = carType
-        }
+        parkingSpaces[index] = carType
     }
 
 }
