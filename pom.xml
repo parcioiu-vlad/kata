@@ -8,7 +8,7 @@
   <version>1.0-SNAPSHOT</version>
 
   <properties>
-    <scala-library.version>2.13.6</scala-library.version>
+    <scala-library.version>2.13.9</scala-library.version>
     <scalatest_2.11.version>3.0.0</scalatest_2.11.version>
 
     <junit.version>4.13.2</junit.version>
